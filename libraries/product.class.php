@@ -188,25 +188,26 @@ class Product {
     /**
      * Prekių sandėliuose išrinkimas
      */
-	public function getWarehousedProducts($warehouseID) {
-		$warehouseID = mysql::escapeFieldForSQL($warehouseID);
-	
-		$query = "SELECT 
-					  `sandeliuojama_preke`.`fk_PREKEid`,
-					  `sandeliuojama_preke`.`fk_SANDELISsandelio_id`,
-					  `sandeliuojama_preke`.`kiekis` AS `saugomas_kiekis`,
-					  `sandelis`.`pavadinimas` AS `sandelio_pavadinimas`,
-					  `preke`.`pavadinimas` AS `prekes_pavadinimas`,
-					  `sandelis`.`adresas`
-				FROM `sandeliuojama_preke`
-					LEFT JOIN `sandelis`
-						ON `sandeliuojama_preke`.`fk_SANDELISsandelio_id`=`sandelis`.`sandelio_id`
-					LEFT JOIN `preke` 
-						ON `sandeliuojama_preke`.`fk_PREKEid`=`preke`.`id`
-				WHERE `fk_SANDELISsandelio_id`='{$warehouseID}'";
-		$data = mysql::select($query);
-		return $data;
-	}
+    public function getWarehousedProducts($productID) {
+        $productID = mysql::escapeFieldForSQL($productID);
+    
+        $query = "SELECT 
+                    `sandeliuojama_preke`.`fk_PREKEid`,
+                    `sandeliuojama_preke`.`fk_SANDELISsandelio_id`,
+                    `sandeliuojama_preke`.`kiekis`,
+                    `sandelis`.`pavadinimas` AS `sandelio_pavadinimas`,
+                    `preke`.`pavadinimas` AS `prekes_pavadinimas`
+                  FROM `sandeliuojama_preke`
+                    LEFT JOIN `sandelis`
+                      ON `sandeliuojama_preke`.`fk_SANDELISsandelio_id` = `sandelis`.`sandelio_id`
+                    LEFT JOIN `preke` 
+                      ON `sandeliuojama_preke`.`fk_PREKEid` = `preke`.`id`
+                  WHERE `fk_PREKEid` = '{$productID}'";
+        
+        $data = mysql::select($query);
+        
+        return $data;
+    }
 	public function deleteProductReviews($productId) {
 		$productId = mysql::escapeFieldForSQL($productId);
 		
