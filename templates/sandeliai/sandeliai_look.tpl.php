@@ -26,6 +26,6 @@
 		<input type="text" readonly="readonly" id="adresas" name="adresas" class="form-control" value="<?php echo isset($data[0]['adresas']) ? $data[0]['adresas'] : ''; ?>">
 	</div>
 
-	<input type="submit" class="btn btn-primary w-25" name="submit" value="Uždaryti">
+	<input type="submit" class="btn btn-dark w-25" name="submit" value="Uždaryti">
 	
 </form>

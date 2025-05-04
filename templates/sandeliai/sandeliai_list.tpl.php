@@ -12,13 +12,16 @@
 	</div>
 <?php } ?>
 
-<table class="table">
+<table class="table table-striped">
+	<thead>
 	<tr>
 		<th>ID</th>
 		<th>Pavadinimas</th>
         <th>Adresas</th>
 		<th></th>
 	</tr>
+	</thead>
+	<tbody>
 	<?php
 		// suformuojame lentelę
 		foreach($data as $key => $val) {
@@ -28,11 +31,12 @@
 					. "<td>{$val['pavadinimas']}</td>"
                     . "<td>{$val['adresas']}</td>"
 					. "<td class='d-flex flex-row-reverse gap-2'>"
-						. "<a href='index.php?module={$module}&action=look&id={$val['sandelio_id']}'>peržiūrėti</a>"
+						. "<a href='index.php?module={$module}&action=look&id={$val['sandelio_id']}'class='btn btn-dark btn-sm'>peržiūrėti</a>"
 					. "</td>"
 				. "</tr>";
 		}
 	?>
+	</tbody>
 </table>
 
 <?php

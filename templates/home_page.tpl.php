@@ -20,4 +20,11 @@
 			Atidaryti
 		</a>
 	</div>
+	<div class="feature col">
+		<h2>sandeliai</h2>
+		<p>Sandelių peržiūra</p>
+		<a href="index.php?module=warehouse&action=list" class="btn btn-dark">
+			Atidaryti
+		</a>
+	</div>
 </div>

@@ -38,5 +38,5 @@
 
 	<p class="required-note">* pažymėtus laukus užpildyti privaloma</p>
 
-	<input type="submit" class="btn btn-primary w-25" name="submit" value="Išsaugoti">
+	<input type="submit" class="btn btn-dark w-25" name="submit" value="Išsaugoti">
 </form>
