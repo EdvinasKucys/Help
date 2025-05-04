@@ -19,12 +19,6 @@
 	
 <h4 class="mt-3">Prekės informacija</h4>
 
-	<!-- <div class="form-group">
-		<label for="id">Prekes id<?php echo in_array('id', $required) ? '<span> *</span>' : ''; ?></label>
-		<input type="text" id="id" <?php if(isset($data['editing'])) { ?> readonly="readonly" <?php } ?> name="id" class="form-control" value="<?php echo isset($data['id']) ? $data['pavadinimas'] : ''; ?>">
-	</div> -->
-
-
 	<div class="form-group">
 		<label for="Pavadinimas">Prekės pavadinimas<?php echo in_array('pavadinimas', $required) ? '<span> *</span>' : ''; ?></label>
 		<input type="text" id="pavadinimas" name="pavadinimas" class="form-control" value="<?php echo isset($data['pavadinimas']) ? $data['pavadinimas'] : ''; ?>">
@@ -63,6 +57,23 @@
 						$selected = " selected='selected'";
 					}
 					echo "<option{$selected} value='{$val['gamintojo_id']}'>{$val['gamintojo_id']} - {$val['pavadinimas']}</option>";
+				}
+			?>
+		</select>
+	</div>
+	<div class="form-group">
+		<label for="fk_KATEGORIJAid_KATEGORIJA">Prekės kategorija<?php echo in_array('fk_KATEGORIJAid_KATEGORIJA', $required) ? '<span> *</span>' : ''; ?></label>
+		<select id="fk_KATEGORIJAid_KATEGORIJA" name="fk_KATEGORIJAid_KATEGORIJA" class="form-select form-control">
+			<option value="">---------------</option>
+			<?php
+				// išrenkame klientus
+				$kategorijos = $categoryObj->getCategoryList();
+				foreach($kategorijos as $key => $val) {
+					$selected = "";
+					if(isset($data['fk_KATEGORIJAid_KATEGORIJA']) && $data['fk_KATEGORIJAid_KATEGORIJA'] == $val['id_KATEGORIJA']) {
+						$selected = " selected='selected'";
+					}
+					echo "<option{$selected} value='{$val['id_KATEGORIJA']}'>{$val['id_KATEGORIJA']} - {$val['pavadinimas']}</option>";
 				}
 			?>
 		</select>
