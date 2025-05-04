@@ -15,7 +15,7 @@ $paging->process($elementCount, $pageId);
 // išrenkame nurodyto puslapio sutartis
 $data = $prekesObj->getProductList($paging->size, $paging->first);
 
-// įtraukiame šabloną
-include "templates/{$module}/{$module}_list.tpl.php";
+// įtraukiame šabloną - FIX: Use prekes instead of product for template path
+include "templates/prekes/prekes_list.tpl.php";
 
 ?>

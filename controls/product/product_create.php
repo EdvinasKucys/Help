@@ -4,24 +4,20 @@
 $prekesObj = new Product();
 $sandeliaiObj = new Warehouse();
 $gamintojaiObj = new Manufacturer();
-
+$categoryObj = new Category();
 
 $formErrors = null;
 $data = array();
 $data['sandeliuojama_preke'] = array();
 
 // nustatome privalomus laukus
-$required = array('pavadinimas', 'kaina', 'svoris', 'gamintojas', 'kategorija', 'fk_GAMINTOJASgamintojo_id', 'fk_KATEGORIJAid_KATEGORIJA');
+$required = array('pavadinimas', 'kaina', 'svoris', 'fk_GAMINTOJASgamintojo_id', 'fk_KATEGORIJAid_KATEGORIJA');
 
 // maksimalūs leidžiami laukų ilgiai
 $maxLengths = array (
 	'pavadinimas' => 200,
-	'kategorija' => 50,
-	'gamintojas'=> 200,
-	'medziaga'=> 100,
 	'aprasymas'=> 255,
-	'fk_Gamintojasid_Gamintojas'=> 64,
-	'fk_KATEGORIJAid_KATEGORIJA'=> 11,
+	'medziaga'=> 100,
 );
 
 // paspaustas išsaugojimo mygtukas
@@ -31,34 +27,31 @@ if(!empty($_POST['submit'])) {
 		'pavadinimas' => 'anything',
 		'kaina' => 'float',
 		'svoris' => 'float',
-		'kategorija' => 'alfnum',
-		'gamintojas'=> 'alfnum',
-		'medziaga'=> 'alfnum',
+		'medziaga'=> 'anything',
 		'aprasymas'=> 'anything',
-		'fk_Gamintojasid_Gamintojas'=> 'alfnum',
+		'fk_GAMINTOJASgamintojo_id'=> 'anything',
 		'fk_KATEGORIJAid_KATEGORIJA'=> 'int',
-		'kiekis'=> 'int',
     );
 	
 	// sukuriame laukų validatoriaus objektą
-	$validator = new validator($validations, $required);
+	$validator = new validator($validations, $required, $maxLengths);
 
 	// laukai įvesti be klaidų
 	if($validator->validate($_POST)) {
-		// įrašome naują sutartį
+		// įrašome naują prekę
 		$prekesID = $prekesObj->insertProduct($_POST);
 
-		// įrašome užsakytas paslaugas
-		foreach($_POST['sandelis'] as $keyForm => $sandelisForm) {
-
-			// gauname paslaugos id, galioja nuo ir kaina reikšmes {$price['fk_paslauga']}#{$price['galioja_nuo']}}
-			
-			$sandelisId = $sandelisForm;
-
-			$sandeliaiObj->insertWarehouseProduct($prekesID, $sandelisId, $_POST['kiekis'][$keyForm]);
+		// įrašome prekes į sandėlius
+		if(isset($_POST['sandelis']) && !empty($_POST['sandelis'])) {
+			foreach($_POST['sandelis'] as $keyForm => $sandelisForm) {
+				if(!empty($sandelisForm) && !empty($_POST['kiekis'][$keyForm])) {
+					$sandelisId = $sandelisForm;
+					$sandeliaiObj->insertWarehouseProduct($prekesID, $sandelisId, $_POST['kiekis'][$keyForm]);
+				}
+			}
 		}
 
-		// nukreipiame vartotoją į sutarčių puslapį
+		// nukreipiame vartotoją į prekių puslapį
 		if($formErrors == null) {
 			common::redirect("index.php?module={$module}&action=list");
 			die();
@@ -74,21 +67,24 @@ if(!empty($_POST['submit'])) {
 		if(isset($_POST['sandelis'])) {
 			$i = 0;
 			foreach($_POST['sandelis'] as $key => $val) {
-				// gauname paslaugos id, galioja nuo ir kaina reikšmes {$price['fk_paslauga']}#{$price['galioja_nuo']}
-				
-				$sandelisId = $val;
-				
-				$data['sandeliuojama_preke'][$i]['fk_PREKEid'] = $sandelisId;
-				$data['sandeliuojama_preke'][$i]['kiekis'] = $_POST['kiekis'][$key];
+				if(!empty($val)) {
+					$sandelisId = $val;
+					
+					$data['sandeliuojama_preke'][$i]['fk_SANDELISsandelio_id'] = $sandelisId;
+					$data['sandeliuojama_preke'][$i]['kiekis'] = $_POST['kiekis'][$key];
 
-				$i++;
+					$i++;
+				}
 			}
 		}
 	}
 }
 array_unshift($data['sandeliuojama_preke'], array());
 
+// Get the categories for dropdown
+$kategorijos = $categoryObj->getCategoriesForSelect();
+
 // įtraukiame šabloną
-include "templates/{$module}/{$module}_form.tpl.php";
+include "templates/prekes/prekes_form.tpl.php";
 
 ?>

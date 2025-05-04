@@ -15,7 +15,7 @@ $paging->process($elementCount, $pageId);
 // išrenkame nurodyto puslapio modelius
 $data = $gamintojaiObj->getManufacturerList($paging->size, $paging->first);
 
-// įtraukiame šabloną
-include "templates/{$module}/{$module}_list.tpl.php";
+// įtraukiame šabloną - FIX: Use gamintojai instead of manufacturer for template path
+include "templates/gamintojai/gamintojai_list.tpl.php";
 	
 ?>

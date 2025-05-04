@@ -4,24 +4,20 @@
 $prekesObj = new Product();
 $sandeliaiObj = new Warehouse();
 $gamintojaiObj = new Manufacturer();
-
+$categoryObj = new Category();
 
 $formErrors = null;
 $data = array();
 $data['sandeliuojama_preke'] = array();
 
 // nustatome privalomus laukus
-$required = array('pavadinimas', 'kaina', 'svoris', 'gamintojas', 'kategorija', 'fk_GAMINTOJASgamintojo_id', 'fk_KATEGORIJAid_KATEGORIJA');
+$required = array('pavadinimas', 'kaina', 'svoris', 'fk_GAMINTOJASgamintojo_id', 'fk_KATEGORIJAid_KATEGORIJA');
 
 // maksimalūs leidžiami laukų ilgiai
 $maxLengths = array (
 	'pavadinimas' => 200,
-	'kategorija' => 50,
-	'gamintojas'=> 200,
-	'medziaga'=> 100,
 	'aprasymas'=> 255,
-	'fk_Gamintojasid_Gamintojas'=> 64,
-	'fk_KATEGORIJAid_KATEGORIJA'=> 11,
+	'medziaga'=> 100,
 );
 
 // paspaustas išsaugojimo mygtukas
@@ -31,36 +27,30 @@ if(!empty($_POST['submit'])) {
 		'pavadinimas' => 'anything',
 		'kaina' => 'float',
 		'svoris' => 'float',
-		'kategorija' => 'alfnum',
-		'gamintojas'=> 'alfnum',
-		'medziaga'=> 'alfnum',
+		'medziaga'=> 'anything',
 		'aprasymas'=> 'anything',
-		'fk_Gamintojasid_Gamintojas'=> 'alfnum',
+		'fk_GAMINTOJASgamintojo_id'=> 'anything',
 		'fk_KATEGORIJAid_KATEGORIJA'=> 'int',
-		'kiekis'=> 'int',
     );
 		
 	// sukuriame laukų validatoriaus objektą
-	$validator = new validator($validations, $required);
+	$validator = new validator($validations, $required, $maxLengths);
 
 	// laukai įvesti be klaidų
 	if($validator->validate($_POST)) {
-		// atnaujiname sutartį
+		// atnaujiname prekę
 		$prekesObj->updateProduct($_POST);
 
-		// pašaliname nebereikalingas paslaugas ir įrašome naujas
-		// gauname esamas paslaugas
+		// pašaliname nebereikalingas prekes iš sandėlių ir įrašome naujas
+		// gauname esamus įrašus
 		$PrekesSandeliuoseFromDb = $prekesObj->getWarehousedProducts($id);
 
-		// jeigu paslaugos kainos nerandame iš formos gautame masyve, šaliname
+		// jeigu prekės nerandame iš formos gautame masyve, šaliname
 		foreach($PrekesSandeliuoseFromDb as $PrekeSandelyDb) {
 			$found = false;
 			if(isset($_POST['sandelis'])) {
 				foreach($_POST['sandelis'] as $keyForm => $sandelisForm) {
-					// gauname paslaugos id, galioja nuo ir kaina reikšmes {$price['fk_paslauga']}#{$price['galioja_nuo']}
-					
 					$sandelisId = $sandelisForm;
-					
 					
 					if($PrekeSandelyDb['fk_SANDELISsandelio_id'] == $sandelisId && $PrekeSandelyDb['kiekis'] == $_POST['kiekis'][$keyForm]) {
 						$found = true;
@@ -69,34 +59,31 @@ if(!empty($_POST['submit'])) {
 			}
 
 			if(!$found) {
-				// šalinama paslaugos kaina
+				// šalinama prekė iš sandėlio
 				$prekesObj->deleteProductFromWarehouse($id, $PrekeSandelyDb['fk_SANDELISsandelio_id']);
 			}
 		}
 		
 		if(isset($_POST['sandelis'])) {
 			foreach($_POST['sandelis'] as $keyForm => $sandelisForm) {
-				// jeigu užsakytos paslaugos nerandame duomenų bazėje, tačiau ji yra formoje, įrašome
-
-				// gauname paslaugos id, galioja nuo ir kaina reikšmes {$price['fk_paslauga']}#{$price['galioja_nuo']}
-				
+				// jeigu prekės nerandame duomenų bazėje, tačiau ji yra formoje, įrašome
 				$sandelisId = $sandelisForm;
 				
 				$found = false;
 				foreach($PrekesSandeliuoseFromDb as $PrekeSandelyDb) {
-					if($PrekeSandelyDb['fk_SANDELISsandelio_id'] == $sandelisId && $serviceDb['kiekis'] == $_POST['kiekis'][$keyForm]) {
+					if($PrekeSandelyDb['fk_SANDELISsandelio_id'] == $sandelisId && $PrekeSandelyDb['kiekis'] == $_POST['kiekis'][$keyForm]) {
 						$found = true;
 					}
 				}
 
 				if(!$found) {
-					// įrašoma paslaugos kaina
+					// įrašoma prekė į sandėlį
 					$sandeliaiObj->insertWarehouseProduct($id, $sandelisId, $_POST['kiekis'][$keyForm]);
 				}
 			}
 		}
 
-		// nukreipiame vartotoją į sutarčių puslapį
+		// nukreipiame vartotoją į prekių puslapį
 		common::redirect("index.php?module={$module}&action=list");
 		die();
 	} else {
@@ -108,35 +95,34 @@ if(!empty($_POST['submit'])) {
 		if(isset($_POST['sandelis'])) {
 			$i = 0;
 			foreach($_POST['sandelis'] as $key => $val) {
-				// gauname paslaugos id, galioja nuo ir kaina reikšmes {$price['fk_paslauga']}#{$price['galioja_nuo']}
-				
+				// gauname sandėlio ID
 				$sandelisId = $val;
 				
-				
-				$data['o'][$i]['fk_SANDELISsandelio_id'] = $sandelisId;
-				$data['o'][$i]['saugomas_kiekis'] = $_POST['kiekis'][$key];
+				$data['sandeliuojama_preke'][$i]['fk_SANDELISsandelio_id'] = $sandelisId;
+				$data['sandeliuojama_preke'][$i]['kiekis'] = $_POST['kiekis'][$key];
 
 				$i++;
 			}
 		}
 
-		array_unshift($data['o'], array());
+		array_unshift($data['sandeliuojama_preke'], array());
 	}
 } else {
 	//  išrenkame elemento duomenis ir jais užpildome formos laukus.
 	$data = $prekesObj->getProduct($id);
-	$data['o'] = $prekesObj->getWarehousedProducts($id);
+	$data['sandeliuojama_preke'] = $prekesObj->getWarehousedProducts($id);
 
-	// į užsakytų paslaugų masyvo pradžią įtraukiame tuščią reikšmę, kad užsakytų paslaugų formoje
-	// būtų visada išvedami paslėpti formos laukai, kuriuos galėtume kopijuoti ir pridėti norimą
-	// kiekį paslaugų
+	// į masyvo pradžią įtraukiame tuščią reikšmę
 	array_unshift($data['sandeliuojama_preke'], array());
 }
+
+// Get the categories for dropdown
+$kategorijos = $categoryObj->getCategoriesForSelect();
 
 // nustatome požymį, kad įrašas redaguojamas norint išjungti ID redagavimą šablone
 $data['editing'] = 1;
 
 // įtraukiame šabloną
-include "templates/{$module}/{$module}_form.tpl.php";
+include "templates/prekes/prekes_form.tpl.php";
 
 ?>

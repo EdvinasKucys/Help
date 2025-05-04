@@ -7,7 +7,7 @@ $formErrors = null;
 $data = array();
 
 // nustatome privalomus laukus
-$required = array('pavadinimas', 'salis', 'kontaktai');
+$required = array('pavadinimas', 'kontaktai');
 
 // maksimalūs leidžiami laukų ilgiai
 $maxLengths = array (
@@ -42,14 +42,9 @@ if(!empty($_POST['submit'])) {
 		// gauname įvestus laukus
 		$data = $_POST;
 	}
-} else {
-	// tikriname, ar nurodytas elemento id. Jeigu taip, išrenkame elemento duomenis ir jais užpildome formos laukus.
-	if(!empty($id)) {
-		$data = $gamintojasObj->getManufacturer($id);
-	}
 }
 
-// įtraukiame šabloną
-include "templates/{$module}/{$module}_form.tpl.php";
+// įtraukiame šabloną - FIX: use gamintojai directory instead of manufacturer
+include "templates/gamintojai/gamintojai_form.tpl.php";
 
 ?>
