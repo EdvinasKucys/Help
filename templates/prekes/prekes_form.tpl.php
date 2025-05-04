@@ -17,6 +17,8 @@
 
 <form action="" method="post" class="d-grid gap-3">
 	
+<h4 class="mt-3">Prekės informacija</h4>
+
 	<!-- <div class="form-group">
 		<label for="id">Prekes id<?php echo in_array('id', $required) ? '<span> *</span>' : ''; ?></label>
 		<input type="text" id="id" <?php if(isset($data['editing'])) { ?> readonly="readonly" <?php } ?> name="id" class="form-control" value="<?php echo isset($data['id']) ? $data['pavadinimas'] : ''; ?>">
@@ -24,7 +26,7 @@
 
 
 	<div class="form-group">
-		<label for="pavadinimas">Prekės pavadinimas<?php echo in_array('pavadinimas', $required) ? '<span> *</span>' : ''; ?></label>
+		<label for="Pavadinimas">Prekės pavadinimas<?php echo in_array('pavadinimas', $required) ? '<span> *</span>' : ''; ?></label>
 		<input type="text" id="pavadinimas" name="pavadinimas" class="form-control" value="<?php echo isset($data['pavadinimas']) ? $data['pavadinimas'] : ''; ?>">
 	</div>
 	
@@ -66,10 +68,7 @@
 		</select>
 	</div>
 
-	<h4 class="mt-3">Sandėlių likučiai</h4>
-
-
-
+	<h4 class="mt-3">Sandėliuojamos prekės</h4>
 
 
 	<?php if(isset($data['id'])) { ?>
@@ -78,7 +77,9 @@
 
 
 	<div class="row w-75">
+
 		<div class="formRowsContainer column">
+			<div>
 			<div class="row headerRow<?php if(empty($data['sandeliuojama_preke']) || sizeof($data['sandeliuojama_preke']) == 1) echo ' d-none'; ?>">
 				<div class="col-6">Sandėlis</div>
 				<div class="col-1">Kiekis</div>
@@ -103,7 +104,7 @@
 							<div class="col-6">
 								<select class="elementSelector form-select form-control" name="sandelis[]" <?php echo $disabledAttr; ?>>
 									<?php
-										$allSandeliai = $sandeliaiObj->getWarehousesList();
+										$allSandeliai = $sandeliaiObj->getWarehouseList();
 										foreach($allSandeliai as $sandelis) {
 											$selected = "";
 												if(isset($sandelioPrekes['fk_SANDELISsandelio_id']) && $sandelioPrekes['fk_SANDELISsandelio_id'] == $sandelis['sandelio_id']) {
@@ -116,7 +117,7 @@
 							</div>
 
 							<div class="col-2"><input type="text" name="kiekis[]" class="form-control" value="<?php echo $kiekis; ?>" <?php echo $disabledAttr; ?> /></div>
-							<div class="col-4"><a href="#" onclick="return false;" class="removeChild">šalinti</a></div>
+							<div class="col-4"><a href="#" onclick="return false;" class="removeChild btn btn-danger">šalinti</a></div>
 						</div>
 					<?php 
 					}
@@ -124,18 +125,18 @@
 					?>
 		</div>
 		<div class="w-100">
-			<a href="#" class="addChild">Pridėti</a>
-		</div>
+			<a href="#" class="addChild btn btn-dark">Pridėti</a>
+		</div>	
 	</div>
 
-	<div>
+	<!-- <div>
 		<h4>Debug</h4>
 		<pre>
 			<?php var_dump($val, $_POST, $data); ?>
 		</pre>
-	</div>
+	</div> -->
 
 	<p class="required-note">* pažymėtus laukus užpildyti privaloma</p>
 
-	<input type="submit" class="btn btn-primary w-25" name="submit" value="Išsaugoti">
+	<input type="submit" class="btn btn-dark w-25" name="submit" value="Išsaugoti">
 </form>

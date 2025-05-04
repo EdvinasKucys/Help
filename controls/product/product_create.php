@@ -43,7 +43,9 @@ if(!empty($_POST['submit'])) {
 
 		// įrašome prekes į sandėlius
 		if(isset($_POST['sandelis']) && !empty($_POST['sandelis'])) {
+
 			foreach($_POST['sandelis'] as $keyForm => $sandelisForm) {
+				
 				if(!empty($sandelisForm) && !empty($_POST['kiekis'][$keyForm])) {
 					$sandelisId = $sandelisForm;
 					$sandeliaiObj->insertWarehouseProduct($prekesID, $sandelisId, $_POST['kiekis'][$keyForm]);
