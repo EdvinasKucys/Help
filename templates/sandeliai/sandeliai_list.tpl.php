@@ -31,7 +31,7 @@
 					. "<td>{$val['pavadinimas']}</td>"
                     . "<td>{$val['adresas']}</td>"
 					. "<td class='d-flex flex-row-reverse gap-2'>"
-						. "<a href='index.php?module={$module}&action=look&id={$val['sandelio_id']}'class='btn btn-dark btn-sm'>peržiūrėti</a>"
+						. "<a href='index.php?module={$module}&action=look&id={$val['sandelio_id']}'class='btn btn-primary btn-sm'>peržiūrėti</a>"
 					. "</td>"
 				. "</tr>";
 		}

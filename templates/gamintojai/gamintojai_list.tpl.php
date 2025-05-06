@@ -38,7 +38,7 @@
                     . "<td>{$val['salis']}</td>"
                     . "<td>{$val['kontaktai']}</td>"
 					. "<td class='d-flex flex-row-reverse gap-2'>"
-						. "<a href='index.php?module={$module}&action=edit&id={$val['gamintojo_id']}'class='btn btn-dark btn-sm'>redaguoti</a>"
+						. "<a href='index.php?module={$module}&action=edit&id={$val['gamintojo_id']}'class='btn btn-primary btn-sm'>redaguoti</a>"
 						. "<a href='#' onclick='showConfirmDialog(\"{$module}\", \"{$val['gamintojo_id']}\"); return false;'class='btn btn-danger btn-sm'>šalinti</a>&nbsp;"
 					. "</td>"
 				. "</tr>";
