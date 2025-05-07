@@ -1,45 +1,3 @@
--- phpMyAdmin SQL Dump
--- version 5.2.1
--- https://www.phpmyadmin.net/
---
--- Host: 127.0.0.1
--- Generation Time: May 07, 2025 at 08:31 AM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
-
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-START TRANSACTION;
-SET time_zone = "+00:00";
-
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
-
---
--- Database: `juvelyrika`
---
-
--- --------------------------------------------------------
-
---
--- Table structure for table `atsiliepimas`
---
-
-CREATE TABLE `atsiliepimas` (
-  `komentaras` varchar(255) DEFAULT NULL,
-  `įvertinimas` int(11) NOT NULL,
-  `data` date NOT NULL,
-  `id_ATSILIEPIMAS` int(11) NOT NULL,
-  `fk_KLIENTASasmens_kodas` varchar(32) NOT NULL,
-  `fk_PREKEid` varchar(64) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_lithuanian_ci;
-
---
--- Dumping data for table `atsiliepimas`
---
-
 INSERT INTO `atsiliepimas` (`komentaras`, `įvertinimas`, `data`, `id_ATSILIEPIMAS`, `fk_KLIENTASasmens_kodas`, `fk_PREKEid`) VALUES
 ('Labai gražus žiedas, puikiai tinka mano kolekcijai!', 5, '2025-01-15', 1, '38901256478', '1'),
 ('Puiki kokybė, rekomenduoju!', 5, '2025-01-20', 2, '48703121234', '3'),
@@ -74,22 +32,7 @@ INSERT INTO `atsiliepimas` (`komentaras`, `įvertinimas`, `data`, `id_ATSILIEPIM
 ('Labai elegantiški auskarai, puikiai tinka prie vakarinės aprangos.', 5, '2025-03-12', 32, '48602281234', '34'),
 ('Apyrankė tvirta ir graži, bet kabutis kartais atsikabina.', 3, '2025-03-17', 33, '39108121234', '35');
 
--- --------------------------------------------------------
 
---
--- Table structure for table `gamintojas`
---
-
-CREATE TABLE `gamintojas` (
-  `gamintojo_id` int(64) NOT NULL,
-  `pavadinimas` varchar(200) NOT NULL,
-  `salis` varchar(50) DEFAULT NULL,
-  `kontaktai` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_lithuanian_ci;
-
---
--- Dumping data for table `gamintojas`
---
 
 INSERT INTO `gamintojas` (`gamintojo_id`, `pavadinimas`, `salis`, `kontaktai`) VALUES
 (1, 'Amber Baltic', 'Lietuva', 'info@amberbaltic.lt, +37065212345'),
@@ -103,21 +46,7 @@ INSERT INTO `gamintojas` (`gamintojo_id`, `pavadinimas`, `salis`, `kontaktai`) V
 (9, 'Nordic Silver', 'Švedija', 'info@nordicsilver.se, +46812345678'),
 (10, 'Chopard', 'Šveicarija', 'info@chopard.ch, +41218099800');
 
--- --------------------------------------------------------
 
---
--- Table structure for table `kategorija`
---
-
-CREATE TABLE `kategorija` (
-  `pavadinimas` varchar(50) NOT NULL,
-  `aprasymas` varchar(255) DEFAULT NULL,
-  `id_KATEGORIJA` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_lithuanian_ci;
-
---
--- Dumping data for table `kategorija`
---
 
 INSERT INTO `kategorija` (`pavadinimas`, `aprasymas`, `id_KATEGORIJA`) VALUES
 ('Žiedai', 'Įvairūs žiedai', 1),
@@ -130,24 +59,7 @@ INSERT INTO `kategorija` (`pavadinimas`, `aprasymas`, `id_KATEGORIJA`) VALUES
 ('Vestuviniai žiedai', 'Specialūs vestuviniai žiedai', 8),
 ('Akiniai nuo saulės', 'Protec ', 9);
 
--- --------------------------------------------------------
 
---
--- Table structure for table `klientas`
---
-
-CREATE TABLE `klientas` (
-  `asmens_kodas` varchar(32) NOT NULL,
-  `vardas_pavardė` varchar(100) NOT NULL,
-  `elpastas` varchar(254) NOT NULL,
-  `telefonas` varchar(30) NOT NULL,
-  `adresas` varchar(200) NOT NULL,
-  `tipas` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_lithuanian_ci;
-
---
--- Dumping data for table `klientas`
---
 
 INSERT INTO `klientas` (`asmens_kodas`, `vardas_pavardė`, `elpastas`, `telefonas`, `adresas`, `tipas`) VALUES
 ('38506081472', 'Sandra Sandraitė', 'sandra@yahoo.com', '+37063789012', 'Aušros g. 12, Šiauliai', 1),
@@ -161,42 +73,13 @@ INSERT INTO `klientas` (`asmens_kodas`, `vardas_pavardė`, `elpastas`, `telefona
 ('38812035478', 'Adomas Adomaitis', 'adomas@gmail.com', '+37064234567', 'Smetonos g. 5, Panevėžys', 1),
 ('38901256478', 'Jonas Jonaitis', 'jonas@gmail.com', '+37061234567', 'Vilniaus g. 15-2, Vilnius', 1);
 
--- --------------------------------------------------------
 
---
--- Table structure for table `kliento_tipas`
---
-
-CREATE TABLE `kliento_tipas` (
-  `id_kliento_tipas` int(11) NOT NULL,
-  `name` char(8) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_lithuanian_ci;
-
---
--- Dumping data for table `kliento_tipas`
---
 
 INSERT INTO `kliento_tipas` (`id_kliento_tipas`, `name`) VALUES
 (1, 'Paprasta'),
 (2, 'VIP');
 
--- --------------------------------------------------------
 
---
--- Table structure for table `mokejimas`
---
-
-CREATE TABLE `mokejimas` (
-  `mokejimo_id` varchar(64) NOT NULL,
-  `suma` float NOT NULL,
-  `data` date NOT NULL,
-  `busena` int(11) NOT NULL,
-  `mokejimo_budas` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_lithuanian_ci;
-
---
--- Dumping data for table `mokejimas`
---
 
 INSERT INTO `mokejimas` (`mokejimo_id`, `suma`, `data`, `busena`, `mokejimo_budas`) VALUES
 ('M001', 129.99, '2025-01-05', 2, 2),
@@ -210,20 +93,7 @@ INSERT INTO `mokejimas` (`mokejimo_id`, `suma`, `data`, `busena`, `mokejimo_buda
 ('M009', 45.99, '2025-01-25', 2, 1),
 ('M010', 1299.99, '2025-01-28', 2, 3);
 
--- --------------------------------------------------------
 
---
--- Table structure for table `mokejimo_budas`
---
-
-CREATE TABLE `mokejimo_budas` (
-  `id_mokejimo_budas` int(11) NOT NULL,
-  `name` char(16) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_lithuanian_ci;
-
---
--- Dumping data for table `mokejimo_budas`
---
 
 INSERT INTO `mokejimo_budas` (`id_mokejimo_budas`, `name`) VALUES
 (1, 'Grynais'),
@@ -231,46 +101,14 @@ INSERT INTO `mokejimo_budas` (`id_mokejimo_budas`, `name`) VALUES
 (3, 'Banko pavedimu'),
 (4, 'Paypal');
 
--- --------------------------------------------------------
 
---
--- Table structure for table `mokejimo_busena`
---
-
-CREATE TABLE `mokejimo_busena` (
-  `id_mokejimo_busena` int(11) NOT NULL,
-  `name` char(9) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_lithuanian_ci;
-
---
--- Dumping data for table `mokejimo_busena`
---
 
 INSERT INTO `mokejimo_busena` (`id_mokejimo_busena`, `name`) VALUES
 (1, 'Laukiamas'),
 (2, 'Atliktas'),
 (3, 'Atšauktas');
 
--- --------------------------------------------------------
 
---
--- Table structure for table `preke`
---
-
-CREATE TABLE `preke` (
-  `id` int(64) NOT NULL,
-  `pavadinimas` varchar(200) NOT NULL,
-  `aprasymas` varchar(255) DEFAULT NULL,
-  `kaina` float NOT NULL,
-  `svoris` float NOT NULL,
-  `medziaga` varchar(100) DEFAULT NULL,
-  `fk_GAMINTOJASgamintojo_id` varchar(64) NOT NULL,
-  `fk_KATEGORIJAid_KATEGORIJA` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_lithuanian_ci;
-
---
--- Dumping data for table `preke`
---
 
 INSERT INTO `preke` (`id`, `pavadinimas`, `aprasymas`, `kaina`, `svoris`, `medziaga`, `fk_GAMINTOJASgamintojo_id`, `fk_KATEGORIJAid_KATEGORIJA`) VALUES
 (1, 'Gintarinis žiedas \"Baltija\"', 'Rankų darbo žiedas su Baltijos gintaru', 129.99, 5.2, 'Sidabras, gintaras', '1', 1),
@@ -332,22 +170,7 @@ INSERT INTO `preke` (`id`, `pavadinimas`, `aprasymas`, `kaina`, `svoris`, `medzi
 (58, 'UwU', '', 12, 12, '', '6', 8),
 (60, 'Evelina', 'siandien sveriaus', 1e27, 55.5, 'blood', '4', 8);
 
--- --------------------------------------------------------
 
---
--- Table structure for table `pristatymas`
---
-
-CREATE TABLE `pristatymas` (
-  `data` date NOT NULL,
-  `pristatymo_budas` int(11) NOT NULL,
-  `statusas` int(11) NOT NULL,
-  `id_PRISTATYMAS` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_lithuanian_ci;
-
---
--- Dumping data for table `pristatymas`
---
 
 INSERT INTO `pristatymas` (`data`, `pristatymo_budas`, `statusas`, `id_PRISTATYMAS`) VALUES
 ('2025-01-07', 1, 3, 1),
@@ -361,40 +184,14 @@ INSERT INTO `pristatymas` (`data`, `pristatymo_budas`, `statusas`, `id_PRISTATYM
 ('2025-01-27', 3, 3, 9),
 ('2025-01-30', 1, 3, 10);
 
--- --------------------------------------------------------
 
---
--- Table structure for table `pristatymo_budas`
---
-
-CREATE TABLE `pristatymo_budas` (
-  `id_pristatymo_budas` int(11) NOT NULL,
-  `name` char(23) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_lithuanian_ci;
-
---
--- Dumping data for table `pristatymo_budas`
---
 
 INSERT INTO `pristatymo_budas` (`id_pristatymo_budas`, `name`) VALUES
 (1, 'Kurjeriu'),
 (2, 'Paštomatu'),
 (3, 'Atsiėmimas parduotuvėje');
 
--- --------------------------------------------------------
 
---
--- Table structure for table `pristatymo_statusas`
---
-
-CREATE TABLE `pristatymo_statusas` (
-  `id_pristatymo_statusas` int(11) NOT NULL,
-  `name` char(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_lithuanian_ci;
-
---
--- Dumping data for table `pristatymo_statusas`
---
 
 INSERT INTO `pristatymo_statusas` (`id_pristatymo_statusas`, `name`) VALUES
 (1, 'Ruošiamas'),
@@ -402,43 +199,14 @@ INSERT INTO `pristatymo_statusas` (`id_pristatymo_statusas`, `name`) VALUES
 (3, 'Pristatytas'),
 (4, 'Atšauktas');
 
--- --------------------------------------------------------
 
---
--- Table structure for table `sandelis`
---
-
-CREATE TABLE `sandelis` (
-  `sandelio_id` varchar(64) NOT NULL,
-  `pavadinimas` varchar(100) NOT NULL,
-  `adresas` varchar(200) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_lithuanian_ci;
-
---
--- Dumping data for table `sandelis`
---
 
 INSERT INTO `sandelis` (`sandelio_id`, `pavadinimas`, `adresas`) VALUES
 ('S001', 'Pagrindinis sandėlis', 'Vilniaus g. 123, Vilnius'),
 ('S002', 'Kauno filialas', 'Laisvės al. 45, Kaunas'),
 ('S003', 'Klaipėdos sandėlis', 'Taikos pr. 78, Klaipėda');
 
--- --------------------------------------------------------
 
---
--- Table structure for table `sandeliuojama_preke`
---
-
-CREATE TABLE `sandeliuojama_preke` (
-  `kiekis` int(11) NOT NULL,
-  `id_SANDELIUOJAMA_PREKE` int(11) NOT NULL,
-  `fk_SANDELISsandelio_id` varchar(64) DEFAULT NULL,
-  `fk_PREKEid` varchar(64) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_lithuanian_ci;
-
---
--- Dumping data for table `sandeliuojama_preke`
---
 
 INSERT INTO `sandeliuojama_preke` (`kiekis`, `id_SANDELIUOJAMA_PREKE`, `fk_SANDELISsandelio_id`, `fk_PREKEid`) VALUES
 (15, 1, 'S001', '1'),
@@ -503,25 +271,7 @@ INSERT INTO `sandeliuojama_preke` (`kiekis`, `id_SANDELIUOJAMA_PREKE`, `fk_SANDE
 (1, 64, 'S002', '60'),
 (28, 65, 'S003', '60');
 
--- --------------------------------------------------------
 
---
--- Table structure for table `uzsakymas`
---
-
-CREATE TABLE `uzsakymas` (
-  `nr` int(11) NOT NULL,
-  `data` date NOT NULL,
-  `kaina` float NOT NULL,
-  `busena` int(11) NOT NULL,
-  `fk_PRISTATYMASid_PRISTATYMAS` int(11) NOT NULL,
-  `fk_KLIENTASasmens_kodas` varchar(32) NOT NULL,
-  `fk_MOKEJIMASmokejimo_id` varchar(64) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_lithuanian_ci;
-
---
--- Dumping data for table `uzsakymas`
---
 
 INSERT INTO `uzsakymas` (`nr`, `data`, `kaina`, `busena`, `fk_PRISTATYMASid_PRISTATYMAS`, `fk_KLIENTASasmens_kodas`, `fk_MOKEJIMASmokejimo_id`) VALUES
 (1, '2025-01-05', 129.99, 3, 1, '38901256478', 'M001'),
@@ -580,23 +330,7 @@ INSERT INTO `uzsakymas` (`nr`, `data`, `kaina`, `busena`, `fk_PRISTATYMASid_PRIS
 (54, '2025-04-30', 49.99, 1, 54, '48703121234', 'M054'),
 (55, '2025-04-30', 39.99, 1, 55, '39012056789', 'M055');
 
--- --------------------------------------------------------
 
---
--- Table structure for table `uzsakymo_preke`
---
-
-CREATE TABLE `uzsakymo_preke` (
-  `kiekis` int(11) NOT NULL,
-  `kaina` float NOT NULL,
-  `id_UZSAKYMO_PREKE` int(11) NOT NULL,
-  `fk_PREKEid` varchar(64) NOT NULL,
-  `fk_UZSAKYMASnr` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_lithuanian_ci;
-
---
--- Dumping data for table `uzsakymo_preke`
---
 
 INSERT INTO `uzsakymo_preke` (`kiekis`, `kaina`, `id_UZSAKYMO_PREKE`, `fk_PREKEid`, `fk_UZSAKYMASnr`) VALUES
 (1, 129.99, 1, '1', 1),
@@ -665,20 +399,7 @@ INSERT INTO `uzsakymo_preke` (`kiekis`, `kaina`, `id_UZSAKYMO_PREKE`, `fk_PREKEi
 (1, 49.99, 65, '55', 54),
 (1, 39.99, 66, '52', 55);
 
--- --------------------------------------------------------
 
---
--- Table structure for table `įvertinimas`
---
-
-CREATE TABLE `įvertinimas` (
-  `id_įvertinimas` int(11) NOT NULL,
-  `name` char(0) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_lithuanian_ci;
-
---
--- Dumping data for table `įvertinimas`
---
 
 INSERT INTO `įvertinimas` (`id_įvertinimas`, `name`) VALUES
 (1, ''),
@@ -686,163 +407,3 @@ INSERT INTO `įvertinimas` (`id_įvertinimas`, `name`) VALUES
 (3, ''),
 (4, ''),
 (5, '');
-
---
--- Indexes for dumped tables
---
-
---
--- Indexes for table `atsiliepimas`
---
-ALTER TABLE `atsiliepimas`
-  ADD PRIMARY KEY (`id_ATSILIEPIMAS`),
-  ADD KEY `palieka` (`fk_KLIENTASasmens_kodas`),
-  ADD KEY `ivertina` (`fk_PREKEid`);
-
---
--- Indexes for table `gamintojas`
---
-ALTER TABLE `gamintojas`
-  ADD PRIMARY KEY (`gamintojo_id`);
-
---
--- Indexes for table `kategorija`
---
-ALTER TABLE `kategorija`
-  ADD PRIMARY KEY (`id_KATEGORIJA`);
-
---
--- Indexes for table `klientas`
---
-ALTER TABLE `klientas`
-  ADD PRIMARY KEY (`asmens_kodas`),
-  ADD KEY `tipas` (`tipas`);
-
---
--- Indexes for table `kliento_tipas`
---
-ALTER TABLE `kliento_tipas`
-  ADD PRIMARY KEY (`id_kliento_tipas`);
-
---
--- Indexes for table `mokejimas`
---
-ALTER TABLE `mokejimas`
-  ADD PRIMARY KEY (`mokejimo_id`),
-  ADD KEY `busena` (`busena`),
-  ADD KEY `mokejimo_budas` (`mokejimo_budas`);
-
---
--- Indexes for table `mokejimo_budas`
---
-ALTER TABLE `mokejimo_budas`
-  ADD PRIMARY KEY (`id_mokejimo_budas`);
-
---
--- Indexes for table `mokejimo_busena`
---
-ALTER TABLE `mokejimo_busena`
-  ADD PRIMARY KEY (`id_mokejimo_busena`);
-
---
--- Indexes for table `preke`
---
-ALTER TABLE `preke`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `gamina` (`fk_GAMINTOJASgamintojo_id`),
-  ADD KEY `priklauso` (`fk_KATEGORIJAid_KATEGORIJA`);
-
---
--- Indexes for table `pristatymas`
---
-ALTER TABLE `pristatymas`
-  ADD PRIMARY KEY (`id_PRISTATYMAS`),
-  ADD KEY `pristatymo_budas` (`pristatymo_budas`),
-  ADD KEY `statusas` (`statusas`);
-
---
--- Indexes for table `pristatymo_budas`
---
-ALTER TABLE `pristatymo_budas`
-  ADD PRIMARY KEY (`id_pristatymo_budas`);
-
---
--- Indexes for table `pristatymo_statusas`
---
-ALTER TABLE `pristatymo_statusas`
-  ADD PRIMARY KEY (`id_pristatymo_statusas`);
-
---
--- Indexes for table `sandelis`
---
-ALTER TABLE `sandelis`
-  ADD PRIMARY KEY (`sandelio_id`);
-
---
--- Indexes for table `sandeliuojama_preke`
---
-ALTER TABLE `sandeliuojama_preke`
-  ADD PRIMARY KEY (`id_SANDELIUOJAMA_PREKE`),
-  ADD KEY `talpina` (`fk_SANDELISsandelio_id`),
-  ADD KEY `sudaro` (`fk_PREKEid`);
-
---
--- Indexes for table `uzsakymas`
---
-ALTER TABLE `uzsakymas`
-  ADD PRIMARY KEY (`nr`),
-  ADD KEY `busena` (`busena`),
-  ADD KEY `ikydomas` (`fk_PRISTATYMASid_PRISTATYMAS`),
-  ADD KEY `uzsako` (`fk_KLIENTASasmens_kodas`),
-  ADD KEY `sumoka` (`fk_MOKEJIMASmokejimo_id`);
-
---
--- Indexes for table `uzsakymo_preke`
---
-ALTER TABLE `uzsakymo_preke`
-  ADD PRIMARY KEY (`id_UZSAKYMO_PREKE`),
-  ADD KEY `turi` (`fk_PREKEid`),
-  ADD KEY `sudarytas_is` (`fk_UZSAKYMASnr`);
-
---
--- AUTO_INCREMENT for dumped tables
---
-
---
--- AUTO_INCREMENT for table `gamintojas`
---
-ALTER TABLE `gamintojas`
-  MODIFY `gamintojo_id` int(64) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
-
---
--- AUTO_INCREMENT for table `kategorija`
---
-ALTER TABLE `kategorija`
-  MODIFY `id_KATEGORIJA` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
-
---
--- AUTO_INCREMENT for table `preke`
---
-ALTER TABLE `preke`
-  MODIFY `id` int(64) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61;
-
---
--- AUTO_INCREMENT for table `sandeliuojama_preke`
---
-ALTER TABLE `sandeliuojama_preke`
-  MODIFY `id_SANDELIUOJAMA_PREKE` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=66;
-
---
--- Constraints for dumped tables
---
-
---
--- Constraints for table `atsiliepimas`
---
-ALTER TABLE `atsiliepimas`
-  ADD CONSTRAINT `palieka` FOREIGN KEY (`fk_KLIENTASasmens_kodas`) REFERENCES `klientas` (`asmens_kodas`);
-COMMIT;
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
