@@ -14,21 +14,9 @@
 	<ul class="reportList">
 		<li>
 			<p>
-				<a href="index.php?module=report&action=contracts" title="Sutarčių ataskaita">Sutarčių ataskaita</a>
+				<a href="index.php?module=report&action=product_sales" title="Prekių pardavimų ataskaita">Prekių pardavimų ataskaita</a>
 			</p>
-			<p>Nurodytu laikotarpiu sudarytų sutarčių ataskaita.</p>
-		</li>
-		<li>
-			<p>
-				<a href="index.php?module=report&action=services" title="Užsakytų paslaugų ataskaita">Užsakytų paslaugų ataskaita</a>
-			</p>
-			<p>Nurodytu laikotarpiu užsakytų papildomų paslaugų ataskaita.</p>
-		</li>
-		<li>
-			<p>
-				<a href="index.php?module=report&action=delayed_cars" title="Vėluojamų grąžinti automobilių ataskaita">Vėluojamų grąžinti automobilių ataskaita</a>
-			</p>
-			<p>Negrąžintų arba pavėluotai grąžintų automobilių ataskaita.</p>
+			<p>Prekių pardavimų statistika pagal kategorijas ir gamintojus.</p>
 		</li>
 	</ul>
 </div>
