@@ -59,6 +59,9 @@
                     <li class="nav-item"><a class="nav-link <?php if ($module == 'category') {
                                                                 echo 'active';
                                                             } ?>" href="index.php?module=category&action=list">Kategorijos</a></li>
+                    <li class="nav-item"><a class="nav-link <?php if ($module == 'ataskaitos') {
+                                                                echo 'active';
+                                                            } ?>" href="index.php?module=ataskaitos&action=list">Ataskaitos</a></li>
                 </ul>
             </div>
         </div>
