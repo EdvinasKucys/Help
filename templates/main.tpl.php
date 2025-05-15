@@ -53,6 +53,9 @@
                     <li class="nav-item"><a class="nav-link <?php if ($module == 'product') {
                                                                 echo 'active';
                                                             } ?>" href="index.php?module=product&action=list">Prekės</a></li>
+                    <li class="nav-item"><a class="nav-link <?php if ($module == 'product_f3') {
+                                                                echo 'active';
+                                                            } ?>" href="index.php?module=product_f3&action=list">Prekės f3</a></li>
                     <li class="nav-item"><a class="nav-link <?php if ($module == 'warehouse') {
                                                                 echo 'active';
                                                             } ?>" href="index.php?module=warehouse&action=list">Sandėliai</a></li>
