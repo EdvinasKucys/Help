@@ -33,16 +33,6 @@ if (empty($_POST['submit'])) {
 		// Suformuojame WHERE sąlygą pagal filtrus
 		$whereClause = array();
 
-		if (!empty($_POST['dataNuo'])) {
-			$dataNuo = mysql::escapeFieldForSQL($_POST['dataNuo']);
-			$whereClause[] = "`uzsakymas`.`data` >= '{$dataNuo}'";
-		}
-
-		if (!empty($_POST['dataIki'])) {
-			$dataIki = mysql::escapeFieldForSQL($_POST['dataIki']);
-			$whereClause[] = "`uzsakymas`.`data` <= '{$dataIki}'";
-		}
-
 		if (!empty($_POST['kainaNuo'])) {
 			$kainaNuo = mysql::escapeFieldForSQL($_POST['kainaNuo']);
 			$whereClause[] = "`preke`.`kaina` >= {$kainaNuo}";
@@ -69,52 +59,92 @@ if (empty($_POST['submit'])) {
 		}
 
 		// Pagrindinė ataskaitos užklausa
-		$query = "	SELECT  `preke`.`id` as `id`,
-	`preke`.`pavadinimas` as `pavadinimas`,
-	`preke`.`kaina` as `kaina`,
-	`preke`.`svoris` as `svoris`,
-	`kategorija`.`pavadinimas` as `kategorija`,
-	`gamintojas`.`pavadinimas` as `gamintojas`,
-	`sandelis`.`pavadinimas` as `sandelis`,
-	`sandeliuojama_preke`.`kiekis` as `kiekis`,
-     SUM(`sandeliuojama_preke`.`kiekis`) OVER (PARTITION BY `preke`.`id`) as `bendras_kiekis`
-                FROM 
-                    `preke`
-                LEFT JOIN 
-                    `kategorija` ON `preke`.`fk_KATEGORIJAid_KATEGORIJA` = `kategorija`.`id_KATEGORIJA`
-                LEFT JOIN 
-                    `gamintojas` ON `preke`.`fk_GAMINTOJASgamintojo_id` = `gamintojas`.`gamintojo_id`
-                LEFT JOIN 
-                    `sandeliuojama_preke` ON `preke`.`id` = `sandeliuojama_preke`.`fk_PREKEid`
-                LEFT JOIN 
-                    `sandelis` ON `sandeliuojama_preke`.`fk_SANDELISSandelio_id` = `sandelis`.`Sandelio_id`;
-                
-	";
+		$query = "SELECT 
+    `preke`.`id`, 
+    `preke`.`pavadinimas`, 
+    `preke`.`kaina`, 
+    `preke`.`svoris`, 
+    `kategorija`.`pavadinimas` AS `kategorija`, 
+    `gamintojas`.`pavadinimas` AS `gamintojas`, 
+    `sandelis`.`pavadinimas` AS `sandelis`, 
+    `sandeliuojama_preke`.`kiekis` AS `kiekis`, 
+    (
+        SELECT IFNULL(SUM(`kiekis`), 0)
+        FROM `sandeliuojama_preke` 
+        WHERE `fk_PREKEid` = `preke`.`id`
+    ) AS `bendras_kiekis`, 
+    `p`.`bendras_prekes_svoris`, 
+    `k`.`bendra_prekes_kaina` 
+FROM 
+    `preke` 
+LEFT JOIN 
+    `kategorija` ON `preke`.`fk_KATEGORIJAid_KATEGORIJA` = `kategorija`.`id_KATEGORIJA` 
+LEFT JOIN 
+    `gamintojas` ON `preke`.`fk_GAMINTOJASgamintojo_id` = `gamintojas`.`gamintojo_id` 
+LEFT JOIN 
+    `sandeliuojama_preke` ON `preke`.`id` = `sandeliuojama_preke`.`fk_PREKEid` 
+LEFT JOIN 
+    `sandelis` ON `sandeliuojama_preke`.`fk_SANDELISSandelio_id` = `sandelis`.`Sandelio_id`
+LEFT JOIN 
+    (
+        SELECT 
+            `preke`.`id`, 
+            Round(IFNULL(SUM(`sandeliuojama_preke`.`kiekis`), 0) * `preke`.`kaina`,2) AS `bendra_prekes_kaina` 
+        FROM 
+            `preke` 
+        INNER JOIN 
+            `sandeliuojama_preke` ON `preke`.`id` = `sandeliuojama_preke`.`fk_PREKEid` 
+										{$whereClauseStr}
+        GROUP BY 
+            `preke`.`id`
+    ) `k` ON `k`.`id` = `preke`.`id` 
+
+LEFT JOIN 
+    (
+        SELECT 
+            `preke`.`id`, 
+            ROUND(IFNULL(SUM(`sandeliuojama_preke`.`kiekis` * `preke`.`svoris`), 0), 2) AS `bendras_prekes_svoris` 
+        FROM 
+            `preke` 
+        INNER JOIN 
+            `sandeliuojama_preke` ON `preke`.`id` = `sandeliuojama_preke`.`fk_PREKEid` 
+									{$whereClauseStr}
+        GROUP BY 
+            `preke`.`id`
+    ) `p` ON `p`.`id` = `preke`.`id` 
+							{$whereClauseStr}
+GROUP BY 
+    `preke`.`id`, `sandelis`.`pavadinimas` 
+ORDER BY 
+    `preke`.`pavadinimas` ASC;";
 
 		$reportData = mysql::select($query);
 
 		// Bendra statistika - antra užklausa
 		$statQuery = "SELECT 
-                        COUNT(DISTINCT `preke`.`id`) AS `viso_prekiu`,
-                        ROUND(AVG(`preke`.`kaina`), 2) AS `vidutine_kaina_viso`,
-                        SUM(`uzsakymo_preke`.`kiekis`) AS `viso_parduota_vienetu`,
-                        IFNULL(SUM(`uzsakymo_preke`.`kiekis` * `uzsakymo_preke`.`kaina`), 0) AS `viso_pardavimu_suma`,
-                        COUNT(DISTINCT `kategorija`.`id_KATEGORIJA`) AS `viso_kategoriju`
+                        COUNT(DISTINCT `preke`.`id`) AS `prekiu_kiekis`,
+                        ROUND(AVG(`preke`.`kaina`), 2) AS `vidutine_kaina`,
+						ABS(ROUND(AVG(`preke`.`svoris`), 2)) AS `vidutinis_svoris`,
+                        IFNULL(SUM(`sandeliuojama_preke`.`kiekis`), 0) AS `sandeliuojamas_kiekis`,
+                        COUNT(DISTINCT `kategorija`.`id_KATEGORIJA`) AS `viso_kategoriju`,
+						COUNT(DISTINCT `sandelis`.`Sandelio_id`) AS `viso_sandeliu`
                     FROM 
                         `preke`
                     LEFT JOIN 
                         `kategorija` ON `preke`.`fk_KATEGORIJAid_KATEGORIJA` = `kategorija`.`id_KATEGORIJA`
                     LEFT JOIN 
-                        `uzsakymo_preke` ON `preke`.`id` = `uzsakymo_preke`.`fk_PREKEid`
-                    LEFT JOIN 
-                        `uzsakymas` ON `uzsakymo_preke`.`fk_UZSAKYMASnr` = `uzsakymas`.`nr`
+					    `sandeliuojama_preke` ON `preke`.`id` = `sandeliuojama_preke`.`fk_PREKEid` 
+					LEFT JOIN 
+						`gamintojas` ON `preke`.`fk_GAMINTOJASgamintojo_id` = `gamintojas`.`gamintojo_id` 
+					LEFT JOIN 
+						`sandelis` ON `sandeliuojama_preke`.`fk_SANDELISSandelio_id` = `sandelis`.`Sandelio_id`
+
+
                     {$whereClauseStr}";
 
 		$statsData = mysql::select($statQuery);
 
 		// perduodame datos filtro reikšmes į šabloną
-		$data['dataNuo'] = isset($_POST['dataNuo']) ? $_POST['dataNuo'] : '';
-		$data['dataIki'] = isset($_POST['dataIki']) ? $_POST['dataIki'] : '';
 		$data['kainaNuo'] = isset($_POST['kainaNuo']) ? $_POST['kainaNuo'] : '';
 		$data['kainaIki'] = isset($_POST['kainaIki']) ? $_POST['kainaIki'] : '';
 		$data['fk_KATEGORIJAid_KATEGORIJA'] = isset($_POST['fk_KATEGORIJAid_KATEGORIJA']) ? $_POST['fk_KATEGORIJAid_KATEGORIJA'] : '';

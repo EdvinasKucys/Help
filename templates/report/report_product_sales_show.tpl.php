@@ -1,25 +1,6 @@
 <ul id="reportInfo">
 	<li class="title">Prekių pardavimų ataskaita</li>
 	<li>Sudarymo data: <span><?php echo date("Y-m-d"); ?></span></li>
-	<li>Laikotarpis:
-		<span>
-			<?php
-			if (!empty($data['dataNuo'])) {
-				if (!empty($data['dataIki'])) {
-					echo "Užsakymai nuo {$data['dataNuo']} iki {$data['dataIki']}";
-				} else {
-					echo "Užsakymai nuo {$data['dataNuo']}";
-				}
-			} else {
-				if (!empty($data['dataIki'])) {
-					echo "Užsakymai iki {$data['dataIki']}";
-				} else {
-					echo "Visi užsakymai";
-				}
-			}
-			?>
-		</span>
-	</li>
 	<li>Kainos filtras:
 		<span>
 			<?php
@@ -77,60 +58,93 @@ if (sizeof($reportData) > 0) { ?>
 	<table class="table table-striped">
 		<thead>
 			<tr>
-				<th>Prekės id</th>
-				<th>Prekė</th>
+				<th>Kategorija</th>
 				<th>Vieneto kaina</th>
 				<th>Vieneto svoris</th>
-				<th>Kategorija</th>
-				<th>Gamintojas</th>
 				<th>Sandelis</th>
 				<th>Kiekis sandelyje</th>
-				<th>Bendras kiekis</th>
 			</tr>
 		</thead>
 
 		<tbody>
 			<?php
 			// suformuojame lentelę
-			foreach ($reportData as $key => $val) {
+			for($i = 0; $i < sizeof($reportData); $i++) {
+						
+				if($i == 0 || $reportData[$i]['id'] != $reportData[$i-1]['id']) {
+					echo
+						"<tr class='table-primary'>"
+							. "<td colspan='5'>{$reportData[$i]['gamintojas']} {$reportData[$i]['pavadinimas']}</td>"
+						. "</tr>";
+				}
+			
+				
 				echo
-				"<tr>"
-					. "<td>{$val['id']}</td>"
-					. "<td>{$val['pavadinimas']}</td>"
-					. "<td>{$val['kaina']} €</td>"
-					. "<td>{$val['svoris']} g</td>"
-					. "<td>{$val['kategorija']}</td>"
-					. "<td>{$val['gamintojas']}</td>"
-					. "<td>{$val['sandelis']}</td>"
-					. "<td>{$val['kiekis']}</td>"
-					. "<td>{$val['bendras_kiekis']}</td>"
+					"<tr>"
+						. "<td>{$reportData[$i]['kategorija']}</td>"
+						. "<td>{$reportData[$i]['kaina']} &euro;</td>"
+						. "<td>{$reportData[$i]['svoris']} g</td>"
+						. "<td>{$reportData[$i]['sandelis']}</td>"
+						. "<td>{$reportData[$i]['kiekis']}</td>"
 					. "</tr>";
+				if($i == (sizeof($reportData) - 1) || $reportData[$i]['id'] != $reportData[$i+1]['id']) {
+					if($reportData[$i]['bendra_prekes_kaina'] == 0) {
+						$reportData[$i]['bendra_prekes_kaina'] = "nėra";
+					} else {
+						$reportData[$i]['bendra_prekes_kaina'] .= " &euro;";
+					}
+					if($reportData[$i]['bendras_prekes_svoris'] == 0) {
+						$reportData[$i]['bendras_prekes_svoris'] = "nėra";
+					} else {
+						$reportData[$i]['bendras_prekes_svoris'] .= " g";
+					}
+					
+					echo 
+						"<tr>"
+							. "<td colspan='1'></td>"
+							. "<td>{$reportData[$i]['bendra_prekes_kaina']}</td>"
+							. "<td>{$reportData[$i]['bendras_prekes_svoris']}</td>"
+							. "<td colspan='1'></td>"
+							. "<td>{$reportData[$i]['bendras_kiekis']}</td>"
+						. "</tr>";
+				}
 			}
 			?>
 
 			<tr class="table-dark">
 				<td colspan='9'>Bendra statistika</td>
 			</tr>
+			
 
 			<tr class="table-secondary">
-				<td colspan="2"><strong>Viso statistika:</strong></td>
-				<td><strong><?php echo $statsData[0]['viso_prekiu']; ?> prekių</strong></td>
-				<td><strong><?php echo $statsData[0]['vidutine_kaina_viso']; ?> €</strong></td>
-				<td colspan="2"><strong><?php echo $statsData[0]['viso_kategoriju']; ?> kategorijų</strong></td>
-				<td><strong><?php echo $statsData[0]['viso_parduota_vienetu']; ?> vnt.</strong></td>
-				<td><strong><?php echo $statsData[0]['viso_pardavimu_suma']; ?> €</strong></td>
+				<thead>
+				<tr>
+					<th>Skirtingų prekių kiekis</th>
+					<th>Vidutinė prekės kaina</th>
+					<th>Kategorijų kiekis</th>
+					<th>Sandelių kiekis</th>
+					<th>Visų prekių kiekis</th>
+					<th>Vidutinis prekės svoris</th>
+				</tr>
+			</thead>
+				<td><strong><?php echo $statsData[0]['prekiu_kiekis']; ?> prekės</strong></td>
+				<td><strong><?php echo $statsData[0]['vidutine_kaina']; ?> €</strong></td>
+				<td><strong><?php echo $statsData[0]['viso_kategoriju']; ?> kategorijos</strong></td>
+				<td><strong><?php echo $statsData[0]['viso_sandeliu']; ?> sandeliai</strong></td>
+				<td><strong><?php echo $statsData[0]['sandeliuojamas_kiekis']; ?> vnt.</strong></td>
+				<td><strong><?php echo $statsData[0]['vidutinis_svoris']; ?> g</strong></td>
 				<td></td>
 			</tr>
 		</tbody>
 	</table>
-	<a href="index.php?module=report&action=product_sales" title="Nauja ataskaita" class="btn btn-primary mb-3">Nauja ataskaita</a>
+	<a href="index.php?module=report&action=product_sales" title="Nauja ataskaita" class="btn btn-dark mb-3">Nauja ataskaita</a>
 <?php
 } else {
 ?>
 	<div class="alert alert-warning" role="alert">
 		Pagal nurodytus filtrus nerasta jokių prekių.
 	</div>
-	<a href="index.php?module=report&action=product_sales" title="Nauja ataskaita" class="btn btn-primary mb-3">Bandyti kitą filtrą</a>
+	<a href="index.php?module=report&action=product_sales" title="Nauja ataskaita" class="btn btn-dark mb-3">Bandyti kitą filtrą</a>
 <?php
 }
 ?>

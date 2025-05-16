@@ -16,16 +16,6 @@
 <?php } ?>
 
 <form action="" method="post" class="d-grid gap-3">
-	<h4>Laikotarpio filtrai</h4>
-	<div class="form-group">
-		<label for="dataNuo">Užsakymai nuo</label>
-		<input type="text" id="dataNuo" name="dataNuo" class="form-control datepicker" value="<?php echo isset($data['dataNuo']) ? $data['dataNuo'] : ''; ?>">
-	</div>
-	
-	<div class="form-group">
-		<label for="dataIki">Užsakymai iki</label>
-		<input type="text" id="dataIki" name="dataIki" class="form-control datepicker" value="<?php echo isset($data['dataIki']) ? $data['dataIki'] : ''; ?>">
-	</div>
 	
 	<h4>Kainos filtrai</h4>
 	<div class="form-group">
@@ -75,5 +65,5 @@
 		</select>
 	</div>
 
-	<input type="submit" class="btn btn-primary w-25" name="submit" value="Sudaryti ataskaitą">
+	<input type="submit" class="btn btn-dark w-25" name="submit" value="Sudaryti ataskaitą">
 </form>
